@@ -1,6 +1,9 @@
 package machine;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +40,8 @@ public class Machine extends JFrame {
 		ram = new OperativeMemory(100, 10);
 		printer = new Printer(5, 30);
 		keyboard = new Keyboard(30);
+		chs = new ChannelSystem(hdd, printer, keyboard);
+		cpu = new Processor(ram, chs);
 		getContentPane().setLayout(new GridLayout(1, 3));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Machine");
@@ -62,18 +67,29 @@ public class Machine extends JFrame {
 		registersPanel.setBorder(BorderFactory.createTitledBorder("Processor"));
 		
 		Map<ProcessorRegister, JTextField> registersMap = new HashMap<ProcessorRegister, JTextField>();
-		/*
+		
 		for (ProcessorRegister reg : ProcessorRegister.values()) {
 			JPanel registerPanel = new JPanel();
 			JLabel regLabel = new JLabel(reg.name().toUpperCase());
 			final JTextField regField = new JTextField(String.format("%5d", cpu.getValue(reg)));
+			regField.setPreferredSize(new Dimension(50, 20));
 			registersMap.put(reg, regField);
 			regField.setEditable(false);
 			registerPanel.add(regLabel);
 			registerPanel.add(regField);
 			registersPanel.add(registerPanel);
 		}
-		*/
+		
+		cpu.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent e) {
+				ProcessorRegister reg = ProcessorRegister.valueOf(e.getPropertyName());
+				registersMap.get(reg).setText(String.format("%5d", (int)e.getNewValue()));
+			}
+			
+		});
+		
 		return registersPanel;
 	}
 	
@@ -81,6 +97,18 @@ public class Machine extends JFrame {
 		JPanel channelSystemPanel = new JPanel();
 		channelSystemPanel.setBorder(BorderFactory.createTitledBorder("Channel System"));
 		
+		final Map<ChannelSystemRegister, JTextField> registersMap = new HashMap<ChannelSystemRegister, JTextField>();
+		
+		for (ChannelSystemRegister reg : ChannelSystemRegister.values()) {
+			JPanel registerPanel = new JPanel();
+			JLabel regLabel = new JLabel(reg.name().toUpperCase());
+			final JTextField regField = new JTextField();
+			registersMap.put(reg, regField);
+			regField.setEditable(false);
+			registerPanel.add(regLabel);
+			registerPanel.add(regField);
+			registerPanel.add(registerPanel);
+		}
 		
 		channelSystemPanel.add(keyboard);
 		channelSystemPanel.add(printer);
