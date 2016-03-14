@@ -6,4 +6,9 @@ public class OperativeMemory extends MemoryListable {
 		super(blockCount,blockSize);
 	}
 	
+	@Override
+	public String getTitle() {
+		return "Operative Memory";
+	}
+	
 }

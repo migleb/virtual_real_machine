@@ -34,6 +34,6 @@ public abstract class MemoryListable {
 		return blockSize;
 	}
 	
-	//public abstract String getTitle ();
+	public abstract String getTitle ();
 	
 }

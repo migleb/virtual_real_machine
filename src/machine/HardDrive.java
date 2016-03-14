@@ -6,4 +6,9 @@ public class HardDrive extends MemoryListable{
 		super(blockCount, blockSize);
 	}
 	
+	@Override
+	public String getTitle() {
+		return "Hard Drive";
+	}
+	
 }
