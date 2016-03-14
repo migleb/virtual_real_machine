@@ -422,4 +422,5 @@ public class Processor extends PropertyChange {
 		}
 	}
 
+	// end of class
 }
