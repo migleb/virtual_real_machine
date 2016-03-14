@@ -1,6 +1,6 @@
 package machine;
 
-public class ChannelSystem {
+public class ChannelSystem extends PropertyChange {
 
 	private int sa; // source address
 	private int da; // destination address
@@ -10,11 +10,31 @@ public class ChannelSystem {
 	private String savedInput;
 	private Printer printer;
 	private HardDrive hdd;
+	private ChannelSystemInput protocol;
 	
 	public ChannelSystem (HardDrive hdd, Printer printer, Keyboard keyboard) {
 		this.printer = printer;
 		this.hdd = hdd;
 		
+		keyboard.addKeyboardInterface(new KeyboardInterface() {
+			
+			@Override
+			public void deliverData(String data) {
+				setSavedInput(data);
+				protocol.notifyAboutInput();
+			}
+			
+		});
+	}
+	
+	public int getValue(ChannelSystemRegister reg) {
+		switch (reg) {
+		case SA: return sa;
+		case DA: return da;
+		case IO: return io;
+		case DV: return dv;
+		}
+		return 0;
 	}
 
 	public int getSa() {
@@ -59,6 +79,10 @@ public class ChannelSystem {
 
 	public String getSavedInput() {
 		return savedInput;
+	}
+	
+	public void setProtocol(ChannelSystemInput protocol) {
+		this.protocol = protocol;
 	}
 
 	public void setSavedInput(String savedInput) {

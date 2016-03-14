@@ -1,15 +1,21 @@
 package machine;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 public abstract class MemoryListable {
 	
 	protected int blockCount;
 	protected int blockSize;
 	protected String[] memory;
+	protected List<OperativeMemoryChangeListener> memChangeListeners;
 	
 	public MemoryListable (int blockCount, int blockSize) {
 		this.blockCount = blockCount;
 		this.blockSize = blockSize;
 		this.memory = new String[blockCount * blockSize];
+		this.memChangeListeners = new ArrayList<OperativeMemoryChangeListener>();
 		
 		for (int i = 0; i < blockCount; i++) {
 			for (int j = 0; j < blockSize; j++) {
@@ -36,4 +42,11 @@ public abstract class MemoryListable {
 	
 	public abstract String getTitle ();
 	
+	public void addOperativeMemoryChangeListener(OperativeMemoryChangeListener l) {
+		memChangeListeners.add(l);
+	}
+	
+	public void removeOperativeMemoryChangeListener(OperativeMemoryChangeListener l) {
+		memChangeListeners.remove(l);
+	}
 }

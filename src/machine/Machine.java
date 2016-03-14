@@ -2,6 +2,8 @@ package machine;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,6 +58,18 @@ public class Machine extends JFrame {
 		leftPanel.add(initializeRegisters());
 		leftPanel.add(initializeChannelSystem());
 		
+		JButton stepButton = new JButton("Step");
+		stepButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cpu.step();
+			}
+			
+		});
+		
+		leftPanel.add(stepButton);
+		
 		getContentPane().add(leftPanel);
 		getContentPane().add(initializeTable(ram));
 		getContentPane().add(initializeTable(hdd));
@@ -83,9 +98,9 @@ public class Machine extends JFrame {
 		cpu.addPropertyChangeListener(new PropertyChangeListener() {
 			
 			@Override
-			public void propertyChange(PropertyChangeEvent e) {
-				ProcessorRegister reg = ProcessorRegister.valueOf(e.getPropertyName());
-				registersMap.get(reg).setText(String.format("%5d", (int)e.getNewValue()));
+			public void propertyChange(PropertyChangeEvent evt) {
+				ProcessorRegister reg = ProcessorRegister.valueOf(evt.getPropertyName());
+				registersMap.get(reg).setText(String.format("%5d", (int)evt.getNewValue()));
 			}
 			
 		});
@@ -102,13 +117,23 @@ public class Machine extends JFrame {
 		for (ChannelSystemRegister reg : ChannelSystemRegister.values()) {
 			JPanel registerPanel = new JPanel();
 			JLabel regLabel = new JLabel(reg.name().toUpperCase());
-			final JTextField regField = new JTextField();
+			final JTextField regField = new JTextField(String.format("%5d", chs.getValue(reg)));
 			registersMap.put(reg, regField);
 			regField.setEditable(false);
 			channelSystemPanel.add(regLabel);
 			channelSystemPanel.add(regField);
 			channelSystemPanel.add(registerPanel);
 		}
+		
+		chs.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				ChannelSystemRegister reg = ChannelSystemRegister.valueOf(evt.getPropertyName());
+				registersMap.get(reg).setText(String.format("%5d", (int)evt.getNewValue()));
+			}
+			
+		});
 		
 		channelSystemPanel.add(keyboard);
 		channelSystemPanel.add(printer);
@@ -122,6 +147,25 @@ public class Machine extends JFrame {
 		final JTable dataTable = new JTable(table);
 		JScrollPane scrollPane = new JScrollPane(dataTable);
 		scrollPane.setBorder(BorderFactory.createTitledBorder(memory.getTitle()));
+		
+		memory.addOperativeMemoryChangeListener(new OperativeMemoryChangeListener(){
+
+			@Override
+			public void memoryChanged(int block, int idx, String value) {
+				// TODO Auto-generated method stub
+				int i = block * memory.getBlockSize() + idx;
+				table.removeRow(i);
+				table.insertRow(i, new Object[]{i, value});
+			}
+
+			@Override
+			public void memoryExecuted(int block, int idx) {
+				// TODO Auto-generated method stub
+				int row = block * memory.getBlockSize() + idx;
+				dataTable.changeSelection(row, 0, false, false);
+			}
+			
+		});
 		
 		return scrollPane;
 	}
