@@ -1,9 +1,16 @@
 package machine;
 
-public class Printer {
+import javax.swing.JTextArea;
 
-	public Printer () {
-		
+public class Printer extends JTextArea{
+
+	public Printer (int row, int column) {
+		super(row,column);
+		setEditable(false);
+	}
+	
+	public void printData (String data) {
+		append(data);
 	}
 	
 }
