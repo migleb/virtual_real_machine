@@ -102,12 +102,12 @@ public class Machine extends JFrame {
 		for (ChannelSystemRegister reg : ChannelSystemRegister.values()) {
 			JPanel registerPanel = new JPanel();
 			JLabel regLabel = new JLabel(reg.name().toUpperCase());
-			final JTextField regField = new JTextField();
+			final JTextField regField = new JTextField(5);
 			registersMap.put(reg, regField);
 			regField.setEditable(false);
 			registerPanel.add(regLabel);
 			registerPanel.add(regField);
-			registerPanel.add(registerPanel);
+			channelSystemPanel.add(registerPanel);
 		}
 		
 		channelSystemPanel.add(keyboard);
