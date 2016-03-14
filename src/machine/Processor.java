@@ -20,61 +20,78 @@ public class Processor extends PropertyChange {
 	public Processor (OperativeMemory ram, ChannelSystem chn) {
 		this.ram = ram;
 		this.chn = chn;
+		this.chn.setProtocol(new ChannelSystemInput() {
+			@Override
+			public void notifyAboutInput() {
+				setSi(4);
+			}
+		});
 	}
 
 	// Register value setters
 	private void setMode (int mode) {
 		if (this.mode != mode) {
+			changes.firePropertyChange(ProcessorRegister.MODE.name(), this.mode, mode);
 			this.mode = mode;
 		}
 	}
 	private void setPtr (int ptr) {
 		if (this.ptr != ptr) {
+			changes.firePropertyChange(ProcessorRegister.PTR.name(), this.ptr, ptr);
 			this.ptr = ptr;
 		}
 	}
 	private void setGr (int gr) {
 		if (this.gr != gr){
+			changes.firePropertyChange(ProcessorRegister.GR.name(), this.gr, gr);
 			this.gr = gr;
 		}
 	}
 	private void setPc (int pc) {
 		if (this.pc != pc){
+			changes.firePropertyChange(ProcessorRegister.PC.name(), this.pc, pc);
 			this.pc = pc;
 		}
 	}
 	private void setIh (int ih) {
 		if (this.ih != ih){
+			changes.firePropertyChange(ProcessorRegister.IH.name(), this.ih, ih);
 			this.ih = ih;
 		}
 	}
 	private void setSp (int sp) {
 		if (this.sp != sp){
+			changes.firePropertyChange(ProcessorRegister.SP.name(), this.sp, sp);
 			this.sp = sp;
 		}
 	}
 	private void setCf (int cf) {
 		if (this.cf != cf){
+			changes.firePropertyChange(ProcessorRegister.CF.name(), this.cf, cf);
 			this.cf = cf;
 		}
 	}
 	private void setPi (int pi) {
 		if (this.pi != pi){
+			changes.firePropertyChange(ProcessorRegister.PI.name(), this.pi, pi);
 			this.pi = pi;
 		}
 	}
 	private void setSi (int si) {
 		if (this.si != si){
+			changes.firePropertyChange(ProcessorRegister.SI.name(), this.si, si);
 			this.si = si;
 		}
 	}
 	private void setTi (int ti) {
 		if (this.ti != ti){
+			changes.firePropertyChange(ProcessorRegister.TI.name(), this.ti, ti);
 			this.ti = ti;
 		}
 	}
 	private void setMr (int mr) {
 		if (this.mr != mr){
+			changes.firePropertyChange(ProcessorRegister.MR.name(), this.mr, mr);
 			this.mr = mr;
 		}
 	}
