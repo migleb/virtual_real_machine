@@ -83,12 +83,12 @@ public class Processor {
 	}
 
 	// Register value getter
-	public int getValue (ProcesorRegister reg){
+	public int getValue (ProcessorRegister reg){
 		switch (reg) {
 			case CF: return cf;
 			case GR: return gr;
 			case IH: return ih;
-			case Mode: return mode;
+			case MODE: return mode;
 			case PC: return pc;
 			case PI: return pi;
 			case SP: return sp;
@@ -243,6 +243,7 @@ public class Processor {
 						return;
 					}
 				}
+				// 4 letter length commands
 				switch (cmd.substring(0, 4)) {
 					case "SMOD" : {
 						setMode(Integer.parseInt(cmd.substring(4, 5)));
@@ -280,6 +281,7 @@ public class Processor {
 						return;
 					}
 				}
+				// 5 letter length commands
 				if (cmd.substring(0, 5).equalsIgnoreCase("RESTR")) {
 					setGr(pop());
 					setCf(pop());
@@ -289,10 +291,120 @@ public class Processor {
 					return;
 				}
 			}
-
 			// all commands (virtual and real machines)
+			// All are 2 letter length commands
+			switch (cmd.substring(0, 2)) {
+				case "MG" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					int value = Integer.parseInt(getValueInAddress(address));
+					setGr(value);
+					break;
+				}
+				case "MM" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					ram.occupyMemory(address/10, address%10, String.valueOf(this.gr));
+					break;
+				}
+				case "GV" : {
+					setGr(Integer.parseInt(cmd.substring(2,5)));
+					break;
+				}
+				case "AD" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					int value = Integer.parseInt(getValueInAddress(address));
+					setGr(this.gr + value);
+					break;
+				}
+				case "CP" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					int value = Integer.parseInt(getValueInAddress(address));
+					if (this.gr ==  value) {
+						setCf (0);
+					} else {
+						if (this.gr > value) {
+							setCf(1);
+						} else {
+							setCf(2);
+						}
+					}
+					break;
+				}
+				case "JE" : {
+					if (this.cf == 0) {
+						int address = buildAdress(cmd.substring(2, 5));
+						setPc(address);
+					}
+					break;
+				}
+				case "JL" : {
+					if (this.cf == 2) {
+						int address = buildAdress(cmd.substring(2, 5));
+						setPc(address);
+					}
+					break;
+				}
+				case "JG" : {
+					if (this.cf == 1) {
+						int address = buildAdress(cmd.substring(2, 5));
+						setPc(address);
+					}
+					break;
+				}
+				case "GO" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					setPc(address);
+					break;
+				}
+				case "CL" : {
+					int address = buildAdress(cmd.substring(2, 5));
+					push (pc);
+					setPc(address);
+					break;
+				}
+				case "RT" : {
+					setPc(pop());
+					break;
+				}
+				case "SC" : {
+					cmdTime = 3;			// reading takes more time
+					setMr(buildAdress(String.valueOf(gr)));
+					setSi (3);
+					break;
+				}
+				case "PT" : {
+					cmdTime = 3;			// writing takes more time
+					setMr(buildAdress(String.valueOf(gr)));
+					setSi (2);
+					break;
+				}
+				case "FM" : {
+					if (this.mode == 1) {
+						int block = physicalTrack(Integer.valueOf(cmd.substring(2,3)));
+						setMr(block);
+						setPi(4);
+					}
+					break;
+				}
+				case "RM" : {
+					if (this.mode == 1) {
+						int block = physicalTrack(Integer.valueOf(cmd.substring(2,3)));
+						setMr(block);
+						setPi(3);
+					}
+					break;
+				}
+				case "HT" : {
+					if (mode == 1) {
+						setSi(1);
+						break;
+					}
+					break;
+				}
+				default: {
+					throw new Exception("Unknown command");
+				}
 
-
+			}
 
 		} catch (InvalidMemoryException e) {
 			setPi(1);
@@ -307,7 +419,6 @@ public class Processor {
 			setTi(Math.max(ti - cmdTime, 0));
 			test();
 		}
-
 	}
 
 }
