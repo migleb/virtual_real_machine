@@ -105,9 +105,9 @@ public class Machine extends JFrame {
 			final JTextField regField = new JTextField();
 			registersMap.put(reg, regField);
 			regField.setEditable(false);
-			registerPanel.add(regLabel);
-			registerPanel.add(regField);
-			registerPanel.add(registerPanel);
+			channelSystemPanel.add(regLabel);
+			channelSystemPanel.add(regField);
+			channelSystemPanel.add(registerPanel);
 		}
 		
 		channelSystemPanel.add(keyboard);

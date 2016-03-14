@@ -161,7 +161,6 @@ public class Processor extends PropertyChange {
 		int word = address%10;
 		return ram.getMemory(block, word);
 	}
-	
 	private void doCommand (String cmd) {
 		incPc();
 		int cmdTime = 1;			// how much time of processor used
