@@ -47,6 +47,7 @@ public class ChannelSystem extends PropertyChange {
 
 	public void setSa(int sa) {
 		if (this.sa != sa) {
+			changes.firePropertyChange(ChannelSystemRegister.SA.name(), this.sa, sa);
 			this.sa = sa;
 		}
 	}
@@ -57,6 +58,7 @@ public class ChannelSystem extends PropertyChange {
 
 	public void setDa(int da) {
 		if (this.da != da) {
+			changes.firePropertyChange(ChannelSystemRegister.DA.name(), this.da, da);
 			this.da = da;
 		}
 	}
@@ -67,6 +69,7 @@ public class ChannelSystem extends PropertyChange {
 
 	public void setIo(int io) {
 		if (this.io != io) {
+			changes.firePropertyChange(ChannelSystemRegister.IO.name(), this.io, io);
 			this.io = io;
 		}
 	}
@@ -77,6 +80,7 @@ public class ChannelSystem extends PropertyChange {
 
 	public void setDv(int dv) {
 		if (this.dv != dv) {
+			changes.firePropertyChange(ChannelSystemRegister.DV.name(), this.dv, dv);
 			this.dv = dv;
 		}
 	}
