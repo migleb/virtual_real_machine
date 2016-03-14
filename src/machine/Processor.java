@@ -291,8 +291,8 @@ public class Processor {
 					return;
 				}
 			}
-			// all commands (virtual and real machines)
-			// All are 2 letter length commands
+
+			// all commands (2 letter length) (virtual and real machines)
 			switch (cmd.substring(0, 2)) {
 				case "MG" : {
 					int address = buildAdress(cmd.substring(2, 5));
