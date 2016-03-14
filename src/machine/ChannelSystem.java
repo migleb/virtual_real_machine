@@ -26,10 +26,6 @@ public class ChannelSystem extends PropertyChange {
 			
 		});
 	}
-
-	public void dataOut (String data) {
-		this.printer.printData(data);
-	}
 	
 	public int getValue(ChannelSystemRegister reg) {
 		switch (reg) {
@@ -103,6 +99,10 @@ public class ChannelSystem extends PropertyChange {
 	
 	public String readExternalDrive(int block, int idx) {
 		return hdd.getMemory(block, idx);
+	}
+
+	public void dataOut (String data) {
+		this.printer.printData(data);
 	}
 	
 }
