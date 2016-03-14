@@ -1,6 +1,6 @@
 package machine;
 
-public class Processor {
+public class Processor extends PropertyChange {
 
 	int mode; // Machine mode
 	int ptr; // Pages table register
@@ -161,6 +161,7 @@ public class Processor {
 		int word = address%10;
 		return ram.getMemory(block, word);
 	}
+	
 	private void doCommand (String cmd) {
 		incPc();
 		int cmdTime = 1;			// how much time of processor used
